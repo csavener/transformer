@@ -141,8 +141,9 @@ def get_or_build_tokenizer(config, ds, lang):
 def get_ds(config):
     # It only has the train split, so we divide it overselves
     ds_raw = load_dataset(f"{config['datasource']}", f"{config['lang_src']}-{config['lang_tgt']}", split='train')
-    # df_filtrado = df[df['texto'].str.len() <= limite_maximo]
-    print (ds_raw[0]['translation'].str.len())
+    ds_raw = ds_raw[ds_raw['translation'].apply(lambda x: len(x['en']) <= 200 and len(x['es']) <= 200)]
+
+
     # Build tokenizers
     tokenizer_src = get_or_build_tokenizer(config, ds_raw, config['lang_src'])
     tokenizer_tgt = get_or_build_tokenizer(config, ds_raw, config['lang_tgt'])
