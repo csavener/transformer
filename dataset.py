@@ -36,8 +36,6 @@ class BilingualDataset(Dataset):
 
         # Make sure the number of padding tokens is not negative. If it is, the sentence is too long
         if enc_num_padding_tokens < 0 or dec_num_padding_tokens < 0:
-            print (len(src_text))
-            print (len(tgt_text))
             raise ValueError("Sentence is too long")
 
         # Add <s> and </s> token
