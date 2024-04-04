@@ -137,15 +137,14 @@ def get_or_build_tokenizer(config, ds, lang):
     else:
         tokenizer = Tokenizer.from_file(str(tokenizer_path))
     return tokenizer
+def filter_by_length(example):
+    # Retorna True si la longitud de los textos 'en' y 'es' es menor o igual a 200 caracteres
+    return len(example['translation']['en']) <= 200 and len(example['translation']['es']) <= 1000
 
 def get_ds(config):
     # It only has the train split, so we divide it overselves
     ds_raw = load_dataset(f"{config['datasource']}", f"{config['lang_src']}-{config['lang_tgt']}", split='train')
-    print ("type of ds_raw: ", type(ds_raw))
-    print ("type of row: ", type(ds_raw[0]))
-    print (ds_raw[0])
-    ds_raw = ds_raw[ds_raw['translation'].apply(lambda x: len(x['en']) <= 200 and len(x['es']) <= 200)]
-
+    ds_raw = ds_raw.filter(filter_by_length)
 
     # Build tokenizers
     tokenizer_src = get_or_build_tokenizer(config, ds_raw, config['lang_src'])
